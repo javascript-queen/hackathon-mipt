@@ -1,0 +1,28 @@
+{% block h1 %}Вход{% endblock %}
+
+{% block midbar %}{% endblock %}
+
+{% block sidebar_pull_left_override %}{% endblock %}
+{% block content_pull_right_override %}{% endblock %}
+
+{% block article %}
+
+    {% if form.errors %}
+        <div class="alert alert-danger">
+            Неверное имя пользователя или пароль.
+        </div>
+    {% endif %}
+
+    e.g.: demo / demo
+
+    <form class="form-horizontal login-form" method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        {{ form.username.label_tag }}
+        {{ form.username }}
+        {{ form.password.label_tag }}
+        {{ form.password }}
+        <input type="submit" value="Войти" />
+        <input type="hidden" name="next" value="{% if next %}{{ next }}{% else %}/{% endif %}" />
+    </form>
+
+{% endblock article %}

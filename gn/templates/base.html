@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    {% if settings.LOCAL and settings.DEBUG %}
+        {# region React #}
+        <script type="module">
+            import RefreshRuntime from '{{ settings.VITE_SERVER_BASE_URL }}/static/build/@react-refresh'
+            RefreshRuntime.injectIntoGlobalHook(window)
+            window.$RefreshReg$ = () => {}
+            window.$RefreshSig$ = () => (type) => type
+            window.__vite_plugin_react_preamble_installed__ = true
+        </script>
+        {# endregion React #}
+        {# region Vite #}
+        <script type="module" src="{{ settings.VITE_SERVER_BASE_URL }}/static/build/@vite/client"></script>
+        <script type="module" src="{{ settings.VITE_SERVER_BASE_URL }}/static/build/js/main.tsx"></script>
+        {# endregion Vite #}
+    {% endif %}
+
+    <title>Title</title>
+
+    <script>const GN = {{ js_data|safe }};</script>
+</head>
+<body>
+    {% block content %}{% endblock %}
+</body>
+</html>

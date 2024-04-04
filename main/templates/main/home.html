@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    {% if request.user.is_anonymous %}
+        <a href="{% url 'login' %}">Login</a> (e.g.: demo/demo)<br>
+    {% else %}
+        <b>Current user:</b> {{ request.user.username }}<br>
+        <b>Пример формы:</b><br>
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+            <input name="next" type="hidden" value="{% url 'main:home' %}">
+        </form>
+    {% endif %}<br>
+
+    <a href="{% url 'admin:index' %}">Admin</a><br><br>
+
+    <a href="{% url 'api-root' %}">Rest browsable api</a><br><br>
+
+    <br>
+
+    <div data-js-component="hw">
+        <div class="spinner">Загрузка...</div>
+    </div>
+{% endblock %}

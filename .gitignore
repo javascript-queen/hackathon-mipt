@@ -1,0 +1,25 @@
+# app
+local_settings.py
+
+# jetbrains
+.idea/
+
+# python
+__pycache__/
+*.egg-info/
+env/
+venv/
+.venv/
+
+# pytest etc
+.cache/
+.pytest_cache/
+.hypothesis/
+
+# nodejs-related
+npm-debug.log*
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+node_modules/
+
+# db
+db.sqlite3
