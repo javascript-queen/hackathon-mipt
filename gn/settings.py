@@ -161,6 +161,8 @@ USE_TZ = False
 STATIC_URL = 'static/'
 MEDIA_URL = 'media/'
 
+MEDIA_ROOT = Path(__file__).parent.parent.joinpath('media')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 

@@ -31,6 +31,7 @@ admin.site.site_header = settings.ADMIN_SITE_HEADER
 router = routers.DefaultRouter(trailing_slash=False)
 router.register('users', api.UserViewSet)
 router.register('docs', api.DocViewSet)
+router.register('files', api.FileViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
