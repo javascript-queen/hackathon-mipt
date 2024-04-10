@@ -12,7 +12,7 @@ def custom_processor(request):
 
     current_user_data = None
     if not request.user.is_anonymous:
-        current_user_data = UserSerializer(request.user).data
+        current_user_data = UserSerializer(request.user, context=dict(request=request)).data
 
     return dict(
         settings=SafeSettings,
