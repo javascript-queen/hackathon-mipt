@@ -1,3 +1,4 @@
+{% load main %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -22,9 +23,19 @@
 
     <title>Title</title>
 
-    <script>const GN = {{ js_data|safe }};</script>
+    <script>
+        const GN = {{ base_js_data|dict_merge:js_data|json_dumps|safe }};
+    </script>
 </head>
 <body>
     {% block content %}{% endblock %}
+
+    {% csrf_token %}
+    <script>
+        (function() {
+           const tokenEl = document.querySelector('[name=csrfmiddlewaretoken]');
+           GN.csrf_token = tokenEl ? tokenEl.value : '';
+        }());
+    </script>
 </body>
 </html>
