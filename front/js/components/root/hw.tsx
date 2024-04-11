@@ -50,17 +50,20 @@ const HwFunctionalComponent: FC<HwProps> = ({ csrfToken }) => {
         const formData = new FormData();
         formData.append('file', file);
         formData.append('name', name);
+        formData.append('user', GN.current_user.url);
         formData.append('csrfmiddlewaretoken', GN.csrf_token);
     
         try {
+            // todo блокировать повторные отправки до выполнения этой / показывать элемент "Загрузка..." (какой-нибудь спиннер м.б.), пока происходит отправка
             const response = await axios.post('/api/docs', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            console.log(response.data);
+            console.log('File upload response:', response.data);
         } catch (error) {
             console.error('Error uploading file: ', error);
+            // todo error.response?.data - инфо об ошибках и т.п., можно их выводить в попапе каком-нибудь, например
         }
     };
 
