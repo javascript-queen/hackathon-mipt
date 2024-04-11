@@ -7,4 +7,4 @@ class FileSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = File
-        fields = ['id', 'file', 'docs']
+        fields = ['id', 'url', 'file', 'docs']

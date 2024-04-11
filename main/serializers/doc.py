@@ -19,7 +19,7 @@ class DocSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Doc
-        fields = ['id', 'user', 'name', 'file']
+        fields = ['id', 'url', 'user', 'name', 'file']
 
     def create(self, validated_data):
         print('validated data:', validated_data)
