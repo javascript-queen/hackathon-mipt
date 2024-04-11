@@ -1,4 +1,5 @@
-import * as React from 'react';
+import axios from 'axios';
+import React, { useState } from 'react';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
@@ -8,16 +9,26 @@ import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
 
+// В интерфейсе FeaturedPostProps добавим поле для имени файла
 interface FeaturedPostProps {
     post: {
         description: string;
         title: string;
     };
+    onFileUpload: (file: File, fileName: string) => void; // Функция для передачи выбранного файла и его имени в родительский компонент
 }
 
+// В компоненте FeaturedPost передаем имя файла вместе с файлом при вызове onFileUpload
+const FeaturedPost: React.FC<FeaturedPostProps> = ({ post, onFileUpload }) => {
+    const [selectedFileName, setSelectedFileName] = useState<string>('');
 
-export default function FeaturedPost(props: FeaturedPostProps) {
-    const { post } = props;  
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            setSelectedFileName(file.name);
+            onFileUpload(file, file.name); // Теперь передаем и имя файла, и сам файл
+        }
+    };
 
     const VisuallyHiddenInput = styled('input')({
         clip: 'rect(0 0 0 0)',
@@ -30,7 +41,6 @@ export default function FeaturedPost(props: FeaturedPostProps) {
         whiteSpace: 'nowrap',
         width: 1,
     });
-
 
     return (
         <Grid item xs={12} md={6}>
@@ -50,8 +60,8 @@ export default function FeaturedPost(props: FeaturedPostProps) {
                             tabIndex={-1}
                             startIcon={<CloudUploadIcon />}
                         >
-                            Загрузить файл
-                            <VisuallyHiddenInput type="file" accept=".doc, .docx" />
+                            {selectedFileName ? selectedFileName : "Загрузить файл"}
+                            <VisuallyHiddenInput type="file" accept=".doc, .docx" onChange={handleFileChange} />
                         </Button>
                     </CardContent>
                 </Card>
@@ -59,3 +69,5 @@ export default function FeaturedPost(props: FeaturedPostProps) {
         </Grid>
     );
 }
+
+export default FeaturedPost;
