@@ -1,6 +1,8 @@
 #!/bin/bash
 set -eo pipefail
 
+IMAGE=hackaton-mipt-digital-24-04/images:gn
+
 export DOCKER_BUILDKIT=1
 
 #export DOCKER_HOST=$(cat local/docker_host.txt)
@@ -44,9 +46,10 @@ set -u
 
 if [ "$build" -eq 1 ]
 then
-    cd ../..
-    docker build -t hackaton-mipt-digital-24-04/images:gn -f gn/docker/gunicorn.Dockerfile .
-    cd gn/docker
+    cd ..
+    docker build -t "$IMAGE" -f docker/gunicorn.Dockerfile .
+	docker images --no-trunc --quiet "$IMAGE"
+    cd docker
 fi
 
 if ! docker stack ls &>/dev/null
@@ -60,7 +63,7 @@ if [ "$build" -eq 1 ]
 then
     docker service update --image nginx:1.24.0-alpine gn_nginx
     docker service update --force gn_nginx
-    docker service update --image hackaton-mipt-digital-24-04/images:gn gn_gunicorn
+    docker service update --image "$IMAGE" gn_gunicorn
     docker service update --force gn_gunicorn
 fi
 

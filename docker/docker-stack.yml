@@ -20,7 +20,8 @@ services:
 
         volumes:
             # todo volume for ssl keys etc
-            # - data:/data
+            # todo separate volume for non-nginx files (non-media and non-static data files - db etc)
+            - data:/files
             - /etc/localtime:/etc/localtime:ro
             - /etc/timezone:/etc/timezone:ro
 
@@ -46,7 +47,7 @@ services:
             - web
 
         volumes:
-            - data:/data
+            - data:/files
             - /etc/localtime:/etc/localtime:ro
             - /etc/timezone:/etc/timezone:ro
 

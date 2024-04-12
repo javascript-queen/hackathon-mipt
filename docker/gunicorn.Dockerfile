@@ -1,11 +1,10 @@
 
-
 # todo fix hash
 FROM python:3.12.3-alpine3.19
 
 WORKDIR /app
 
-COPY gn gn
+COPY . gn
 
 RUN apk add --no-cache --virtual .build-deps g++ gcc libc-dev libxslt-dev \
     && apk add --no-cache libxslt libstdc++ \

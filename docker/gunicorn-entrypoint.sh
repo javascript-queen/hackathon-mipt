@@ -1,11 +1,13 @@
 #!/bin/sh -e
 
 
-# todo refactor to docker config
 cd /app
-. venv/bin/activate
+source venv/bin/activate
 cd gn
-python manage.py migrate
+mkdir -p /files/data
+python manage.py migrate --noinput
+rm -rf /files/data/static
+python manage.py collectstatic --noinput
 gunicorn --config /app/gunicorn.conf.py \
     --chdir "/app/gn" \
     "gn.asgi:application"

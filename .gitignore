@@ -27,5 +27,5 @@ node_modules/
 # db
 db.sqlite3
 
-# media files
-media
+# data files (including user-uploaded)
+data

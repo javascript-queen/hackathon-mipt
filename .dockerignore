@@ -1,4 +1,4 @@
-# docker-specific
+# docker
 docker
 .git
 
@@ -28,5 +28,5 @@ node_modules/
 # db
 db.sqlite3
 
-# media files
-media
+# files (including user-uploaded, but not only)
+data

@@ -37,9 +37,10 @@ export default defineConfig({
         // es2020 is the oldest possible target with vite
         target: 'es2020',
         rollupOptions: {
-            input: {
-                'main': path.resolve(__dirname, 'front/js/main.tsx'),
-            },
+            input: [
+                path.resolve(__dirname, 'front/js/main.tsx'),
+                path.resolve(__dirname, 'front/css/main.scss'),
+            ],
         }
     },
     plugins: [
