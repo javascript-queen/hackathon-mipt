@@ -1,0 +1,121 @@
+version: '3.7'
+
+
+services:
+
+    nginx:
+        # todo fix hash
+        image: nginx:1.24.0-alpine
+        hostname: "nginx-gn"
+
+        depends_on:
+            - gunicorn
+
+        networks:
+            - web
+
+        ports:
+            - 80:80
+            - 443:443
+
+        volumes:
+            # todo volume for ssl keys etc
+            # - data:/data
+            - /etc/localtime:/etc/localtime:ro
+            - /etc/timezone:/etc/timezone:ro
+
+        configs:
+            -   source: nginx-conf_${NGINX_CONF_HASH}
+                target: /etc/nginx/nginx.conf
+                uid: '0'
+                gid: '0'
+                # todo better mode
+                mode: 0444
+
+        stop_grace_period: 5s
+        deploy:
+            replicas: 1
+            restart_policy:
+                condition: on-failure
+
+    gunicorn:
+        # todo fix hash
+        image: "hackaton-mipt-digital-24-04/images:gn"
+        hostname: "gunicorn-gn"
+        networks:
+            - web
+
+        volumes:
+            - data:/data
+            - /etc/localtime:/etc/localtime:ro
+            - /etc/timezone:/etc/timezone:ro
+
+        configs:
+            -   source: gunicorn-entrypoint_${GUNICORN_ENTRYPOINT_HASH}
+                target: /usr/local/bin/docker-entrypoint.sh
+                # todo better uid gid etc
+                uid: '0'
+                gid: '0'
+                mode: 0500
+
+            -   source: gunicorn-conf_${GUNICORN_CONF_HASH}
+                target: /app/gunicorn.conf.py
+                uid: '0'
+                gid: '0'
+                # todo better mode
+                mode: 0444
+
+            -   source: server-settings_${SERVER_SETTINGS_HASH}
+                target: /app/gn/gn/local_settings.py
+                uid: '0'
+                gid: '0'
+                # todo better mode
+                mode: 0444
+
+# todo secrets
+#        secrets:
+#            -   source: gn_${SOME_KEY_HASH}
+#                target: key.json
+#                uid: '0'
+#                gid: '0'
+#                mode: 0400
+
+        stop_grace_period: 5s
+        deploy:
+            endpoint_mode: dnsrr
+            replicas: 1
+            restart_policy:
+                condition: on-failure
+
+        logging:
+            options:
+                max-file: 2
+                max-size: 100k
+
+
+networks:
+    web:
+
+
+configs:
+    gunicorn-entrypoint_${GUNICORN_ENTRYPOINT_HASH}:
+        file: gunicorn-entrypoint.sh
+
+    gunicorn-conf_${GUNICORN_CONF_HASH}:
+        file: gunicorn.conf.py
+
+    nginx-conf_${NGINX_CONF_HASH}:
+        file: nginx.conf
+
+    server-settings_${SERVER_SETTINGS_HASH}:
+        file: server_settings.py
+
+
+# todo secrets
+#secrets:
+#    gn_${SOME_KEY_HASH}:
+#        file: keys/key.json
+
+
+volumes:
+    data:

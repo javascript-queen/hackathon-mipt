@@ -1,8 +1,9 @@
+# docker-specific
+docker
+.git
+
 # app
 local_settings.py
-secrets
-local
-keys
 
 # jetbrains
 .idea/
