@@ -7,6 +7,7 @@ import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import CircularProgress from '@mui/material/CircularProgress';
 import { styled } from '@mui/material/styles';
 
 // В интерфейсе FeaturedPostProps добавим поле для имени файла
@@ -21,12 +22,18 @@ interface FeaturedPostProps {
 // В компоненте FeaturedPost передаем имя файла вместе с файлом при вызове onFileUpload
 const FeaturedPost: React.FC<FeaturedPostProps> = ({ post, onFileUpload }) => {
     const [selectedFileName, setSelectedFileName] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(false); // Состояние для отслеживания процесса загрузки
 
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
             setSelectedFileName(file.name);
-            onFileUpload(file, file.name); // Теперь передаем и имя файла, и сам файл
+            setLoading(true); // Устанавливаем состояние загрузки в true
+            // Имитация загрузки с таймером
+            setTimeout(async () => {
+                await onFileUpload(file, file.name); // Вызываем функцию загрузки файла
+                setLoading(false); // После окончания загрузки устанавливаем состояние загрузки в false
+            }, 1000); // 1 секунда имитации загрузки
         }
     };
 
@@ -59,8 +66,13 @@ const FeaturedPost: React.FC<FeaturedPostProps> = ({ post, onFileUpload }) => {
                             variant="contained"
                             tabIndex={-1}
                             startIcon={<CloudUploadIcon />}
+                            disabled={loading} // Делаем кнопку неактивной во время загрузки
                         >
-                            {selectedFileName ? selectedFileName : "Загрузить файл"}
+                            {loading ? (
+                                <CircularProgress size={20} /> // Отображаем CircularProgress во время загрузки
+                            ) : (
+                                selectedFileName ? selectedFileName : "Загрузить файл"
+                            )}
                             <VisuallyHiddenInput type="file" accept=".doc, .docx" onChange={handleFileChange} />
                         </Button>
                     </CardContent>
