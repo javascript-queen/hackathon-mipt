@@ -51,7 +51,7 @@ if settings.DEBUG:
     urlpatterns.insert(0, path('__debug__/', include(debug_toolbar.urls)))
 
 
-if settings.LOCAL:
+if settings.LOCAL and settings.DEBUG:
     urlpatterns += urls_static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
     # serve favicon (remove annoying console errors)

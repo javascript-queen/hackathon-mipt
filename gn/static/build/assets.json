@@ -1,0 +1,43 @@
+{
+  "_react-DhslorjU.js": {
+    "file": "assets/react-DhslorjU.js",
+    "name": "react",
+    "isDynamicEntry": true,
+    "imports": [
+      "front/js/main.tsx"
+    ],
+    "dynamicImports": [
+      "front/js/components/root/hw.tsx"
+    ]
+  },
+  "front/css/main.scss": {
+    "file": "assets/main-Clm45zmk.css",
+    "src": "front/css/main.scss",
+    "isEntry": true
+  },
+  "front/js/components/root/hw.tsx": {
+    "file": "assets/hw-DVARFixO.js",
+    "name": "hw",
+    "src": "front/js/components/root/hw.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-DhslorjU.js",
+      "front/js/main.tsx"
+    ],
+    "css": [
+      "assets/main-Clm45zmk.css"
+    ]
+  },
+  "front/js/main.tsx": {
+    "file": "assets/main-C1mfjb-Y.js",
+    "name": "main",
+    "src": "front/js/main.tsx",
+    "isEntry": true,
+    "dynamicImports": [
+      "_react-DhslorjU.js"
+    ],
+    "css": [
+      "assets/main-Clm45zmk.css"
+    ]
+  }
+}
