@@ -1,6 +1,9 @@
 # app
 local_settings.py
 
+# secrets
+authorized_key.json
+
 # jetbrains
 .idea/
 
@@ -10,6 +13,7 @@ __pycache__/
 env/
 venv/
 .venv/
+myenv/
 
 # pytest etc
 .cache/
@@ -23,6 +27,9 @@ node_modules/
 
 # db
 db.sqlite3
+
+# mac OS
+.DS_Store
 
 # media files
 media
