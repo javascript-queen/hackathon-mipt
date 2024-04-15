@@ -336,7 +336,40 @@ def filter_and_extract(sections_df, equipment_name, gpt_prompt):
     
     return characteristics_df, "Success"
 
+import time
 
+def extract_requirements(standard_parts):
+
+    task = "Поиск соответствующих пунктов требований и ответных пунктов предложений с конкретными характеристиками продукции. Найди и выведи пары в формате: Пункт требовний Перевод строки Пункт характеристик Две пустые строки и т.д. Если не найдешь, верни 0. Сами тексты: "
+
+    # Создаем пустой список для хранения результатов
+    results = []
+
+    # Цикл отправки запроса для каждой части файла стандартов
+    for part_standard in standard_parts:
+        # Формируем запрос к GPT для извлечения требований из указанной части файла стандартов
+        text_to_process_standard = task + part_standard
+
+        # Отправляем запрос к GPT
+        gpt_response = send_to_gpt(text_to_process_standard)
+        
+        # Добавляем результат в список
+        results.append(gpt_response)
+        
+        # Делаем паузу на одну секунду перед отправкой следующего запроса
+        time.sleep(1)
+
+    # Парсим результаты и создаем DataFrame
+    parsed_results = []
+    for result in results:
+        gpt_response_text = result['result']['alternatives'][0]['message']['text']
+        formatted_response = gpt_response_text.replace('\n', ' ')
+        parsed_result = formatted_response.split('***')
+        parsed_results.append(parsed_result)
+        
+    df = pd.DataFrame(parsed_results, columns=['Номер пункта', 'Текст пункта'])
+    
+    return df
 
 # Функция сравнения смысловых блоков в двух списках ключевых характеристик
 def compare_characteristics(standard_df, offer_df):
