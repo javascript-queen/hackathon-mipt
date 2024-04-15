@@ -183,7 +183,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # Session
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
-
+# todo disable pagination (allow unlimited results per page)
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10
