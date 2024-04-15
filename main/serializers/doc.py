@@ -20,8 +20,8 @@ class DocSerializer(HyperlinkedModelSerializer):
 
     class Meta:
         model = Doc
-        fields = ['id', 'url', 'user', 'name', 'file', 'is_requirements']
-        read_only_fields = ['user']
+        fields = ['id', 'url', 'user', 'name', 'file', 'is_requirements', 'comparisons']
+        read_only_fields = ['comparisons']
         no_update_fields = ['user', 'file', 'is_requirements']
 
     def create(self, validated_data):
