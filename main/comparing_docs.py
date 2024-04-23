@@ -125,8 +125,8 @@ def send_to_gpt(text_to_process):
         "modelUri": f"gpt://{catalog_id}/yandexgpt-pro",
         "completionOptions": {
             "stream": False,
-            "temperature": 0.6,
-            "maxTokens": 2000
+            "temperature": 0,
+            "maxTokens": 10000
         },
         "messages": [
             {
