@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { useState } from 'react';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
@@ -9,31 +8,39 @@ import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CircularProgress from '@mui/material/CircularProgress';
 import { styled } from '@mui/material/styles';
+import mammoth from 'mammoth'; // Импорт библиотеки mammoth.js
 
-// В интерфейсе FeaturedPostProps добавим поле для имени файла
 interface FeaturedPostProps {
     post: {
         description: string;
         title: string;
     };
-    onFileUpload: (file: File, fileName: string) => void; // Функция для передачи выбранного файла и его имени в родительский компонент
+    onFileUpload: (file: File, fileName: string) => void;
+    loading: boolean;
+    onButtonClick: () => void;
 }
 
-// В компоненте FeaturedPost передаем имя файла вместе с файлом при вызове onFileUpload
-const FeaturedPost: React.FC<FeaturedPostProps> = ({ post, onFileUpload }) => {
+const FeaturedPost: React.FC<FeaturedPostProps> = ({ post, onFileUpload, loading, onButtonClick }) => {
     const [selectedFileName, setSelectedFileName] = useState<string>('');
-    const [loading, setLoading] = useState<boolean>(false); // Состояние для отслеживания процесса загрузки
+    const [preview, setPreview] = useState<string>(''); // Состояние для превью
 
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
             setSelectedFileName(file.name);
-            setLoading(true); // Устанавливаем состояние загрузки в true
-            // Имитация загрузки с таймером
-            setTimeout(async () => {
-                await onFileUpload(file, file.name); // Вызываем функцию загрузки файла
-                setLoading(false); // После окончания загрузки устанавливаем состояние загрузки в false
-            }, 1000); // 1 секунда имитации загрузки
+            onFileUpload(file, file.name); 
+    
+            try {
+                // Используем mammoth для конвертации .doc/.docx в HTML
+                const result = await mammoth.convertToHtml({ arrayBuffer: file });
+                 // Ограничиваем превью первыми 200 словами
+                 const previewText = result.value.split(' ').slice(0, 40).join(' ');
+                 setPreview(previewText); // Обновляем состояние с превью
+            } catch (error) {
+                console.error('Error converting file:', error);
+                // Обработка ошибок при конвертации
+                setPreview('Ошибка при конвертации файла');
+            }
         }
     };
 
@@ -60,24 +67,23 @@ const FeaturedPost: React.FC<FeaturedPostProps> = ({ post, onFileUpload }) => {
                         <Typography variant="subtitle1" paragraph>
                             {post.description}
                         </Typography>
+                        {/* Показываем превью */}
+                        <div dangerouslySetInnerHTML={{ __html: preview }} />
+
                         <Button
                             component="label"
                             role={undefined}
                             variant="contained"
                             tabIndex={-1}
                             startIcon={<CloudUploadIcon />}
-                            disabled={loading} // Делаем кнопку неактивной во время загрузки
                         >
-                            {loading ? (
-                                <CircularProgress size={20} /> // Отображаем CircularProgress во время загрузки
-                            ) : (
-                                selectedFileName ? selectedFileName : "Загрузить файл"
-                            )}
+                            {selectedFileName ? selectedFileName : "Загрузить файл"}
                             <VisuallyHiddenInput type="file" accept=".doc, .docx" onChange={handleFileChange} />
                         </Button>
                     </CardContent>
                 </Card>
             </CardActionArea>
+            {loading && <CircularProgress />} 
         </Grid>
     );
 }

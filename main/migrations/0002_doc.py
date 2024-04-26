@@ -4,7 +4,7 @@ import django.db.models.deletion
 from django.conf import settings
 from django.db import migrations, models
 
-
+# todo: ограничение в 25 символов
 class Migration(migrations.Migration):
 
     dependencies = [
