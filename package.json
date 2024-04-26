@@ -1,5 +1,6 @@
 {
     "private": true,
+    "type": "module",
     "scripts": {
         "prod": "vite build",
         "serve": "npm-run-all --parallel dev-serve dev",

@@ -48,7 +48,7 @@ DEBUG_TOOLBAR_PANELS = [
 ]
 
 INTERNAL_IPS = ['127.0.0.1']
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -161,7 +161,19 @@ USE_TZ = False
 STATIC_URL = 'static/'
 MEDIA_URL = 'media/'
 
-MEDIA_ROOT = Path(__file__).parent.parent.joinpath('media')
+# Naming kinda follows Django conventions (e.g. STATIC_ROOT, MEDIA_ROOT) -
+# see https://docs.djangoproject.com/en/5.0/ref/settings/#static-root
+BASE_ROOT = Path(__file__).parent
+PROJECT_ROOT = BASE_ROOT.parent
+DATA_ROOT = PROJECT_ROOT.joinpath('data')
+STATIC_ROOT = DATA_ROOT.joinpath('static')
+DATA_TMP_ROOT = DATA_ROOT.joinpath('tmp')
+MEDIA_ROOT = DATA_ROOT.joinpath('media')
+MEDIA_TMP_ROOT = DATA_ROOT.joinpath('tmp')
+
+STATICFILES_DIRS = (
+    BASE_ROOT.joinpath('static'),
+)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -171,7 +183,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # Session
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
-
+# todo disable pagination (allow unlimited results per page)
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10
@@ -180,7 +192,7 @@ REST_FRAMEWORK = {
 ADMIN_SITE_HEADER = 'Admin Panel'
 
 try:
-    from .local_settings import *
     LOCAL = True
+    from .local_settings import *
 except ImportError:
     LOCAL = False

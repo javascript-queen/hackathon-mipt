@@ -8,3 +8,4 @@ class FileSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = File
         fields = ['id', 'url', 'file', 'docs']
+        read_only_fields = ['file', 'docs']

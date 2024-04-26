@@ -1,11 +1,9 @@
+# docker
+docker
+.git
+
 # app
 local_settings.py
-
-# secrets
-secrets
-local
-keys
-authorized_key.json
 
 # jetbrains
 .idea/
@@ -16,7 +14,6 @@ __pycache__/
 env/
 venv/
 .venv/
-myenv/
 
 # pytest etc
 .cache/
@@ -31,9 +28,5 @@ node_modules/
 # db
 db.sqlite3
 
-# data files (including user-uploaded)
+# files (including user-uploaded, but not only)
 data
-media
-
-# mac OS
-.DS_Store

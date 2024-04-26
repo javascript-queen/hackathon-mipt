@@ -5,11 +5,12 @@ from django.conf import settings
 from django.db import transaction, IntegrityError
 from rest_framework import serializers
 
-from utils.validation import DrfFileExtensionValidator
+from .base import HyperlinkedModelSerializer
+from .validation import DrfFileExtensionValidator
 from ..models import Doc, File
 
 
-class DocSerializer(serializers.HyperlinkedModelSerializer):
+class DocSerializer(HyperlinkedModelSerializer):
 
     file = serializers.FileField(
         validators=[DrfFileExtensionValidator(['docx'])],
@@ -19,7 +20,9 @@ class DocSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Doc
-        fields = ['id', 'url', 'user', 'name', 'file']
+        fields = ['id', 'url', 'user', 'name', 'file', 'is_requirements', 'comparisons']
+        read_only_fields = ['comparisons']
+        no_update_fields = ['user', 'file', 'is_requirements']
 
     def create(self, validated_data):
         print('validated data:', validated_data)
@@ -27,6 +30,7 @@ class DocSerializer(serializers.HyperlinkedModelSerializer):
         user = validated_data.get('user')
         file_obj = validated_data.get('file')
         name = validated_data.get('name') or file_obj.name
+        is_requirements = validated_data.get('is_requirements')
 
         file_obj.seek(os.SEEK_SET)
 
@@ -48,5 +52,7 @@ class DocSerializer(serializers.HyperlinkedModelSerializer):
                     if not file:
                         raise
             # todo maybe db index etc
-            doc, _ = Doc.objects.get_or_create(user=user, file=file, name=name)
+            doc, _ = Doc.objects.get_or_create(user=user, file=file, is_requirements=is_requirements, name=name)
+            # todo impl cleanup of dangling requirements (mind race conditions)
+            # todo maybe extract all db-altering code to single thread
         return doc

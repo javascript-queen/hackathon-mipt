@@ -30,6 +30,7 @@ admin.site.site_header = settings.ADMIN_SITE_HEADER
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register('users', api.UserViewSet)
+router.register('comparisons', api.ComparisonViewSet)
 router.register('docs', api.DocViewSet)
 router.register('files', api.FileViewSet)
 
@@ -51,7 +52,7 @@ if settings.DEBUG:
     urlpatterns.insert(0, path('__debug__/', include(debug_toolbar.urls)))
 
 
-if settings.LOCAL:
+if settings.LOCAL and settings.DEBUG:
     urlpatterns += urls_static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
     # serve favicon (remove annoying console errors)

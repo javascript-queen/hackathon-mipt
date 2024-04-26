@@ -10,19 +10,22 @@ class MainConfig(AppConfig):
 
     def ready(self):
         post_migrate.connect(_create_demo_users, sender=self)
-        post_migrate.connect(_create_media_and_media_tmp_dir, sender=self)
+        post_migrate.connect(_create_data_dirs, sender=self)
 
 
 def _create_demo_users(**kwargs):
-    if not settings.LOCAL:
-        return
     from main.models import User
     username = 'demo'
     exists = User.objects.filter(username=username).exists()
     if not exists:
         User.objects.create_user(username, 'demo@example.com', password='demo')
+    if not settings.LOCAL:
+        return
+    username = 'admin'
+    exists = User.objects.filter(username=username).exists()
+    if not exists:
         User.objects.create_superuser('admin', 'admin@example.com', 'admin')
 
 
-def _create_media_and_media_tmp_dir(**kwargs):
-    settings.MEDIA_ROOT.joinpath('tmp').mkdir(parents=True, exist_ok=True)
+def _create_data_dirs(**kwargs):
+    settings.DATA_ROOT.joinpath('media', 'tmp').mkdir(parents=True, exist_ok=True)
