@@ -24,7 +24,7 @@ class ComparisonSerializer(HyperlinkedModelSerializer):
             errors['application'] = f"Документ {application.id} - не заявка, а требования."
 
         # Ensure both docs belong to the same user
-        if application.user.id == requirements.user.id:
+        if application.user.id != requirements.user.id:
             # note: ['error msg1', ...] is also ok
             errors['non_field_errors'] = f'Документы принадлежат разным пользователям.'
 
